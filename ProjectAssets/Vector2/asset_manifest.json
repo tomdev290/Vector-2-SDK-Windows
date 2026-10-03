@@ -1,0 +1,14 @@
+{
+  "game": "Vector2",
+  "sourceRoots": {
+    "textures": "../../../../../Assets/Resources",
+    "runData": "../../../../../Assets/Resources/gamedata/run_data",
+    "prefabs": "../../../../../Assets/Resources/prefab",
+    "uiPrefabs": "../../../../../Assets/Resources/ui/prefabs"
+  },
+  "notes": [
+    "This manifest is the source of truth for external Vector 2 asset ingestion.",
+    "Do not rewrite Unity build-map/export rules in this app.",
+    "Import asset metadata into the editor's own catalog instead of treating Unity prefabs as the save format."
+  ]
+}

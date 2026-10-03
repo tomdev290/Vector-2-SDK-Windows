@@ -1,0 +1,115 @@
+<Window x:Class="Vector2LevelEditor.Views.SwarmDesignerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Swarm Designer" Width="860" Height="700" MinWidth="740" MinHeight="580"
+        Background="{DynamicResource PanelBrush}" Foreground="{DynamicResource WindowTextBrush}"
+        WindowStartupLocation="CenterOwner">
+  <Grid>
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <DockPanel Grid.Row="0" Margin="20,16,20,14">
+      <Button DockPanel.Dock="Right" Content="Close" Click="Close_Click" Padding="12,6"/>
+      <StackPanel>
+        <TextBlock Text="Swarm Designer" FontSize="22" FontWeight="SemiBold"/>
+        <TextBlock Text="Activator, hole, and waypoint route" FontSize="12" Foreground="{DynamicResource MutedTextBrush}"/>
+      </StackPanel>
+    </DockPanel>
+    <TabControl x:Name="Sections" Grid.Row="1" Margin="16,0,16,0">
+      <TabItem Header="Setup">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="18">
+            <TextBlock Text="QUICK SETUP" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,10"/>
+            <DockPanel Margin="0,0,0,18">
+              <Button DockPanel.Dock="Right" Content="Create Basic Swarm" Click="CreateBasic_Click" Padding="12,7"/>
+              <ComboBox x:Name="SwarmNames" Width="240" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            </DockPanel>
+            <Separator/>
+            <TextBlock Text="ROOM PIECES" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource MutedTextBrush}" Margin="0,18,0,10"/>
+            <Grid Margin="0,0,0,16">
+              <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+              <StackPanel Grid.Column="0">
+                <TextBlock x:Name="ActivatorCount" Margin="0,6"/>
+                <TextBlock x:Name="HoleCount" Margin="0,6"/>
+              </StackPanel>
+              <StackPanel Grid.Column="1">
+                <TextBlock x:Name="DeactivatorCount" Margin="0,6"/>
+                <TextBlock x:Name="WaypointCount" Margin="0,6"/>
+              </StackPanel>
+            </Grid>
+            <WrapPanel>
+              <Button Content="Add Activator" Click="AddActivator_Click" Margin="0,0,8,8" Padding="10,6"/>
+              <Button Content="Add Swarm Hole" Click="AddHole_Click" Margin="0,0,8,8" Padding="10,6"/>
+              <Button Content="Add Deactivator" Click="AddDeactivator_Click" Margin="0,0,8,8" Padding="10,6"/>
+            </WrapPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Path">
+        <Grid Margin="14">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="225"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+          <DockPanel Grid.Column="0" Margin="0,0,12,0">
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+              <Button DockPanel.Dock="Right" Content="&#xE710;" FontFamily="Segoe MDL2 Assets" Width="27" ToolTip="Add waypoint" Click="AddWaypoint_Click"/>
+              <TextBlock Text="WAYPOINTS" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}" VerticalAlignment="Center"/>
+            </DockPanel>
+            <ListBox x:Name="WaypointList" DisplayMemberPath="Name" SelectionChanged="WaypointList_SelectionChanged"/>
+          </DockPanel>
+          <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="WaypointEditor" Margin="10,0,10,16">
+              <DockPanel Margin="0,0,0,12">
+                <Button DockPanel.Dock="Right" Content="Show on Canvas" Click="ShowOnCanvas_Click" Padding="8,5"/>
+                <TextBlock x:Name="WaypointTitle" FontSize="18" FontWeight="SemiBold" Text="Select a waypoint"/>
+              </DockPanel>
+              <TextBlock Text="Name" FontSize="11" Margin="0,0,0,3"/>
+              <TextBox x:Name="WaypointName" Margin="0,0,0,8"/>
+              <TextBlock Text="Type" FontSize="11" Margin="0,0,0,3"/>
+              <ComboBox x:Name="WaypointType" Margin="0,0,0,8">
+                <ComboBoxItem Content="Normal"/>
+                <ComboBoxItem Content="Start"/>
+              </ComboBox>
+              <TextBlock Text="MOVEMENT" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}" Margin="0,8,0,10"/>
+              <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                  <TextBlock Text="Spawn X" FontSize="11"/><TextBox x:Name="SpawnX" Margin="0,2,0,8"/>
+                  <TextBlock Text="Spawn delay" FontSize="11"/><TextBox x:Name="SpawnDelay" Margin="0,2,0,8"/>
+                  <TextBlock Text="Start acceleration" FontSize="11"/><TextBox x:Name="StartAcceleration" Margin="0,2,0,8"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                  <TextBlock Text="Spawn Y" FontSize="11"/><TextBox x:Name="SpawnY" Margin="0,2,0,8"/>
+                  <TextBlock Text="Speed" FontSize="11"/><TextBox x:Name="Speed" Margin="0,2,0,8"/>
+                  <TextBlock Text="Stop acceleration" FontSize="11"/><TextBox x:Name="StopAcceleration" Margin="0,2,0,8"/>
+                </StackPanel>
+              </Grid>
+              <TextBlock Text="Event key" FontSize="11"/><TextBox x:Name="WaypointKey" Margin="0,2,0,8"/>
+              <Button Content="Apply Waypoint" Click="ApplyWaypoint_Click" HorizontalAlignment="Right" Padding="10,6" Margin="0,0,0,18"/>
+              <TextBlock Text="OUTGOING PATHS" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,8"/>
+              <ListBox x:Name="ConnectionsList" Height="86" DisplayMemberPath="Display"/>
+              <Button Content="Remove Selected Path" Click="RemovePath_Click" HorizontalAlignment="Right" Margin="0,6,0,10"/>
+              <TextBlock Text="Destination" FontSize="11"/><ComboBox x:Name="Destination" Margin="0,2,0,8"/>
+              <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0"><TextBlock Text="Delay frames" FontSize="11"/><TextBox x:Name="EdgeDelay" Margin="0,2,0,8"/></StackPanel>
+                <StackPanel Grid.Column="2"><TextBlock Text="Speed change" FontSize="11"/><TextBox x:Name="EdgeSpeed" Margin="0,2,0,8"/></StackPanel>
+              </Grid>
+              <Button Content="Add Path" Click="AddPath_Click" HorizontalAlignment="Right" Padding="10,6"/>
+            </StackPanel>
+          </ScrollViewer>
+        </Grid>
+      </TabItem>
+      <TabItem Header="Check">
+        <StackPanel Margin="24">
+          <TextBlock x:Name="CheckSummary" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,14"/>
+          <ItemsControl x:Name="Issues">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}" Margin="0,4" TextWrapping="Wrap"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <Button Content="Run Checks" Click="RunChecks_Click" HorizontalAlignment="Left" Padding="10,6" Margin="0,16,0,0"/>
+        </StackPanel>
+      </TabItem>
+    </TabControl>
+    <TextBlock x:Name="Status" Grid.Row="2" Margin="18,10" Foreground="{DynamicResource MutedTextBrush}" FontSize="11"/>
+  </Grid>
+</Window>

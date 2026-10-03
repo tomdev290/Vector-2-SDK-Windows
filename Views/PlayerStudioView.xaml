@@ -1,0 +1,91 @@
+<UserControl x:Class="Vector2LevelEditor.Views.PlayerStudioView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Vector2LevelEditor.Controls"
+             Background="{DynamicResource PanelBrush}" Foreground="{DynamicResource WindowTextBrush}">
+  <UserControl.Resources>
+    <Style x:Key="PlayerSecondaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+      <Setter Property="Background" Value="{DynamicResource ControlBrush}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Setter Property="MinHeight" Value="28"/>
+    </Style>
+    <Style x:Key="PlayerPrimaryButton" TargetType="Button" BasedOn="{StaticResource PlayerSecondaryButton}">
+      <Setter Property="Background" Value="#287DE7"/>
+      <Setter Property="BorderBrush" Value="#287DE7"/>
+      <Setter Property="Foreground" Value="White"/>
+    </Style>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="310"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+    <Border Grid.Column="0" Background="{DynamicResource MenuBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="0,0,1,0">
+      <Grid Margin="18">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <StackPanel>
+          <TextBlock Text="Custom Models" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,14"/>
+          <Button x:Name="ImportModelButton" Content="Import Model XML" Click="ImportModel_Click" Padding="10,6" Margin="0,0,0,7" Style="{StaticResource PlayerPrimaryButton}"/>
+          <Button Content="Choose custom_models Folder" Click="ChooseFolder_Click" Padding="10,6" Margin="0,0,0,7" Style="{StaticResource PlayerSecondaryButton}"/>
+          <TextBlock x:Name="ModelDirectoryLabel" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,12"/>
+          <StackPanel x:Name="PendingImport" Visibility="Collapsed" Margin="0,0,0,14">
+            <TextBlock Text="Model name" FontSize="11"/><TextBox x:Name="ModelName" Margin="0,3,0,7"/>
+            <TextBlock Text="Category" FontSize="11"/>
+            <ComboBox x:Name="ModelCategory" Margin="0,3,0,7">
+              <ComboBoxItem Content="Body"/><ComboBoxItem Content="Chest"/><ComboBoxItem Content="Headwear"/>
+              <ComboBoxItem Content="Hair"/><ComboBoxItem Content="Face"/><ComboBoxItem Content="Feet"/><ComboBoxItem Content="Accessory"/>
+            </ComboBox>
+            <TextBlock Text="Author" FontSize="11"/><TextBox x:Name="ModelAuthor" Margin="0,3,0,7"/>
+            <Button Content="Install Model" Click="InstallModel_Click" Padding="10,6" Style="{StaticResource PlayerPrimaryButton}"/>
+          </StackPanel>
+          <Separator/>
+          <Button Content="Default · Equipped Appearance" Click="RestoreDefault_Click" Margin="0,12,0,12" Padding="8,6"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,4,0,8">
+          <StackPanel>
+            <TextBlock Text="IN-GAME MODEL LAYERS" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,8"/>
+            <StackPanel x:Name="BuiltInLayers" Margin="0,0,0,10"/>
+            <Separator/>
+            <TextBlock Text="IMPORTED MODEL LAYERS" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}" Margin="0,12,0,8"/>
+            <StackPanel x:Name="ImportedLayers"/>
+            <Button x:Name="ClearModelsButton" Content="Clear Imported Models" Click="ClearModels_Click" Padding="8,6" Margin="0,12,0,0" HorizontalAlignment="Left" Foreground="#A73535"/>
+          </StackPanel>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2">
+          <Button Content="Restore Default" Click="RestoreDefault_Click" Padding="8,6" HorizontalAlignment="Left" Foreground="#A73535"/>
+          <TextBlock x:Name="Status" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource MutedTextBrush}" Margin="0,8,0,0"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+    <Grid Grid.Column="1" Margin="22">
+      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+      <DockPanel Margin="0,0,0,12">
+        <Button DockPanel.Dock="Right" Content="Close" Command="{Binding ClosePlayerStudioCommand}" Padding="10,6" Style="{StaticResource PlayerSecondaryButton}"/>
+        <Button DockPanel.Dock="Right" Content="Save Room XML" Click="SaveRoom_Click" Padding="10,6" Margin="0,0,8,0" Style="{StaticResource PlayerSecondaryButton}"/>
+        <ComboBox x:Name="PreviewAnimation" DockPanel.Dock="Right" Width="160" Margin="0,0,12,0" SelectionChanged="PreviewAnimation_SelectionChanged">
+          <ComboBoxItem Content="Default"/><ComboBoxItem Content="Run"/><ComboBoxItem Content="Example Vault"/>
+        </ComboBox>
+        <StackPanel>
+          <TextBlock Text="Player Designer" FontSize="23" FontWeight="SemiBold"/>
+          <TextBlock Text="LEVEL-LOCAL APPEARANCE" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+        </StackPanel>
+      </DockPanel>
+      <Grid Grid.Row="1">
+        <controls:TrickPreviewControl x:Name="Preview" ShowDebugEdges="False" ShowModelOutlines="False" ShowModelNodePoints="False" CenterOnVisibleModel="True">
+          <controls:TrickPreviewControl.PreviewBackground>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+              <GradientStop Color="#0A0C11" Offset="0"/>
+              <GradientStop Color="#192332" Offset="1"/>
+            </LinearGradientBrush>
+          </controls:TrickPreviewControl.PreviewBackground>
+        </controls:TrickPreviewControl>
+        <TextBlock x:Name="PreviewMessage" Foreground="#C5CDD9" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="300"/>
+      </Grid>
+      <DockPanel Grid.Row="2" Margin="0,10,0,0">
+        <TextBlock Text="&#xE71F;" FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Foreground="{DynamicResource MutedTextBrush}"/>
+        <Slider x:Name="ZoomSlider" Width="220" Minimum="0.75" Maximum="8" Value="3.5" Margin="12,0" ValueChanged="ZoomSlider_ValueChanged"/>
+        <TextBlock Text="&#xE8A3;" FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Foreground="{DynamicResource MutedTextBrush}"/>
+        <Button Content="&#xE72C;" FontFamily="Segoe MDL2 Assets" Width="28" Height="26" Margin="12,0,0,0" ToolTip="Reset preview position and zoom" Click="ResetPreview_Click"/>
+      </DockPanel>
+    </Grid>
+  </Grid>
+</UserControl>

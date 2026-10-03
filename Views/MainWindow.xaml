@@ -1,0 +1,847 @@
+﻿<Window x:Class="Vector2LevelEditor.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:Vector2LevelEditor.Models"
+        xmlns:controls="clr-namespace:Vector2LevelEditor.Controls"
+        xmlns:views="clr-namespace:Vector2LevelEditor.Views"
+        xmlns:projectManager="clr-namespace:Vector2LevelEditor.Views.ProjectManager"
+        Title="Vector 2 Level Editor - Alpha 3.6.13"
+        Width="1600"
+        Height="900"
+        MinWidth="1180"
+        MinHeight="720"
+        Background="{DynamicResource PanelBrush}"
+        Foreground="{DynamicResource WindowTextBrush}">
+  <Window.Resources>
+    <views:AssetRowsConverter x:Key="AssetRowsConverter"/>
+  </Window.Resources>
+  <DockPanel>
+    <Menu DockPanel.Dock="Top" Height="24" Background="{DynamicResource MenuBrush}" Foreground="{DynamicResource WindowTextBrush}">
+      <MenuItem Header="_File" Style="{StaticResource ToolsTopMenuItemStyle}">
+        <MenuItem Header="New" Command="{Binding NewCommand}" Style="{StaticResource ToolsSubmenuItemStyle}"/>
+        <MenuItem Header="Open / Import XML" Command="{Binding OpenCommand}" Style="{StaticResource ToolsSubmenuItemStyle}"/>
+        <MenuItem Header="Export XML" Command="{Binding ExportCommand}" Style="{StaticResource ToolsSubmenuItemStyle}"/>
+      </MenuItem>
+      <MenuItem Header="_Edit" Style="{StaticResource ToolsTopMenuItemStyle}">
+        <MenuItem Header="Copy XML" Command="{Binding CopyCommand}" Style="{StaticResource ToolsSubmenuItemStyle}"/>
+        <MenuItem Header="Paste XML" Command="{Binding PasteCommand}" Style="{StaticResource ToolsSubmenuItemStyle}"/>
+        <MenuItem Header="Delete" Command="{Binding DeleteCommand}" Style="{StaticResource ToolsSubmenuItemStyle}"/>
+      </MenuItem>
+      <MenuItem Header="_View" Style="{StaticResource ToolsTopMenuItemStyle}">
+        <MenuItem Header="Refresh Assets" Command="{Binding RefreshAssetsCommand}" Style="{StaticResource ToolsSubmenuItemStyle}"/>
+      </MenuItem>
+      <MenuItem Header="_Project Manager" Command="{Binding OpenProjectManagerCommand}" Style="{StaticResource ToolsTopMenuItemStyle}"/>
+      <MenuItem Header="_Tools" Style="{StaticResource ToolsTopMenuItemStyle}">
+        <MenuItem Header="Project Manager" Command="{Binding OpenProjectManagerCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Room Layouts" Command="{Binding OpenRoomLayoutsCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Entrance Designer" Command="{Binding OpenEntranceStudioCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Exit Designer" Command="{Binding OpenExitStudioCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Triggers" Tag="Trigger Designer" Click="ProjectStudioMenu_Click" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Obstacle Designer" Tag="Obstacles" Click="ProjectStudioMenu_Click" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Traps" Tag="Traps" Click="ProjectStudioMenu_Click" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Player Designer" Command="{Binding OpenPlayerStudioCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Custom Animations" Click="CustomAnimationsMenu_Click" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="AI Designer" Command="{Binding OpenAIStudioCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE8D4;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Background Designer" Command="{Binding OpenBackgroundDesignerCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE91B;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Swarm Designer" Click="SwarmDesignerMenu_Click" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="Dynamic Studio" Command="{Binding OpenDynamicStudioCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Import Custom Textures" Command="{Binding ImportBackgroundTexturesCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE8B5;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Trick Preview" Command="{Binding OpenTrickPreviewCommand}" Style="{StaticResource ToolsSubmenuItemStyle}">
+          <MenuItem.Icon><TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="14"/></MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem Header="_Help" Click="HelpMenu_Click"/>
+      <MenuItem Header="_About" Click="AboutMenu_Click"/>
+    </Menu>
+
+    <Border DockPanel.Dock="Top" Height="52" Visibility="{Binding EditorWorkspaceVisibility}" Background="{DynamicResource ChromeBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="0,0,0,1">
+      <StackPanel Orientation="Horizontal">
+        <Button Content="&#xE710;" Tag="New" ToolTip="New" Command="{Binding NewCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE8E5;" Tag="Open" ToolTip="Open" Command="{Binding OpenCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE8B5;" Tag="Import" ToolTip="Import" Command="{Binding ImportCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE74E;" Tag="Export" ToolTip="Export" Command="{Binding ExportCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE8C8;" Tag="Copy" ToolTip="Copy" Command="{Binding CopyCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE77F;" Tag="Paste" ToolTip="Paste" Command="{Binding PasteCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE74D;" Tag="Delete" ToolTip="Delete" Command="{Binding DeleteCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE768;" Tag="Play" ToolTip="Play" Command="{Binding PlayCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE72C;" Tag="Refresh" ToolTip="Refresh" Command="{Binding RefreshAssetsCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE8B7;" Tag="Projects" ToolTip="Project Manager" Command="{Binding OpenProjectManagerCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE774;" Tag="Browser" ToolTip="Browser" Command="{Binding BrowserCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE7FC;" Tag="Trick" ToolTip="Trick Preview" Command="{Binding OpenTrickPreviewCommand}" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <Button Content="&#xE713;" Tag="Settings" ToolTip="Settings" Command="{Binding SelectCenterTabCommand}" CommandParameter="Settings" Style="{StaticResource ToolbarIconButtonStyle}"/>
+        <TextBlock Width="40"/>
+        <TextBlock Text="Zoom" VerticalAlignment="Center" Foreground="{DynamicResource MutedTextBrush}"/>
+        <Slider Width="180" Minimum="0.15" Maximum="2.5" Value="{Binding Zoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+      </StackPanel>
+    </Border>
+
+    <Border DockPanel.Dock="Top" Height="34" Background="{DynamicResource TabStripBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="0,0,0,1">
+      <DockPanel LastChildFill="False">
+        <ItemsControl DockPanel.Dock="Left" ItemsSource="{Binding Documents}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal"/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate DataType="{x:Type models:LevelDocument}">
+            <Border Margin="6,3,0,0"
+                    PreviewMouseDown="DocumentTab_PreviewMouseDown"
+                    Background="{DynamicResource SettingsCardBrush}"
+                    BorderBrush="{DynamicResource ControlBorderBrush}"
+                    BorderThickness="1,1,1,0">
+              <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right"
+                        Content="x"
+                        Width="22"
+                        Padding="0"
+                        Margin="0"
+                        Command="{Binding DataContext.CloseDocumentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        CommandParameter="{Binding}"/>
+                <Button Command="{Binding DataContext.SelectDocumentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        CommandParameter="{Binding}"
+                        Padding="12,5"
+                        Margin="0">
+                  <TextBlock Text="{Binding Name}"/>
+                </Button>
+              </DockPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Border DockPanel.Dock="Left" Tag="Project Manager" PreviewMouseDown="StudioTab_PreviewMouseDown" Visibility="{Binding ProjectManagerTabVisibility}" Margin="6,3,0,0" Background="{DynamicResource SettingsCardBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1,1,1,0">
+          <DockPanel>
+            <Button DockPanel.Dock="Right" Content="x" Width="22" Padding="0" Margin="0" Command="{Binding CloseProjectManagerCommand}"/>
+            <Button Command="{Binding OpenProjectManagerCommand}" Padding="12,5" Margin="0"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" Margin="0,0,7,0"/><TextBlock Text="Project Manager"/></StackPanel></Button>
+          </DockPanel>
+        </Border>
+        <Border DockPanel.Dock="Left" Tag="AI" PreviewMouseDown="StudioTab_PreviewMouseDown" Visibility="{Binding AIStudioTabVisibility}" Margin="6,3,0,0" Background="{DynamicResource SettingsCardBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1,1,1,0">
+          <DockPanel>
+            <Button DockPanel.Dock="Right" Content="x" Width="22" Padding="0" Command="{Binding CloseAIStudioCommand}"/>
+            <Button Command="{Binding SelectAIStudioCommand}" Padding="12,5" Margin="0"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8D4;" FontFamily="Segoe MDL2 Assets" Margin="0,0,7,0"/><TextBlock Text="AI Designer"/></StackPanel></Button>
+          </DockPanel>
+        </Border>
+        <Border DockPanel.Dock="Left" Tag="Player" PreviewMouseDown="StudioTab_PreviewMouseDown" Visibility="{Binding PlayerStudioTabVisibility}" Margin="6,3,0,0" Background="{DynamicResource SettingsCardBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1,1,1,0">
+          <DockPanel>
+            <Button DockPanel.Dock="Right" Content="x" Width="22" Padding="0" Command="{Binding ClosePlayerStudioCommand}"/>
+            <Button Command="{Binding SelectPlayerStudioCommand}" Padding="12,5" Margin="0"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" Margin="0,0,7,0"/><TextBlock Text="Player Designer"/></StackPanel></Button>
+          </DockPanel>
+        </Border>
+      </DockPanel>
+    </Border>
+
+    <StatusBar DockPanel.Dock="Bottom" Height="24">
+      <StatusBarItem Content="{Binding StatusText}"/>
+      <Separator/>
+      <StatusBarItem>
+        <TextBlock>
+          <Run Text="Zoom "/><Run Text="{Binding Zoom, StringFormat={}{0:P0}}"/>
+        </TextBlock>
+      </StatusBarItem>
+    </StatusBar>
+
+    <Grid>
+      <Grid x:Name="EditorWorkspace" Visibility="{Binding EditorWorkspaceVisibility}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="48"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="306"/>
+      </Grid.ColumnDefinitions>
+
+      <Border Grid.Column="0" Background="{DynamicResource ToolRailBrush}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" CanContentScroll="False">
+          <ItemsControl ItemsSource="{Binding Tools}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <ToggleButton Style="{StaticResource ToolButtonStyle}"
+                              IsChecked="{Binding IsSelected, Mode=OneWay}"
+                              ToolTip="{Binding Label}"
+                              Command="{Binding DataContext.SelectToolCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                              CommandParameter="{Binding Tool}">
+                  <Grid Width="26" Height="26">
+                    <Viewbox Visibility="{Binding IconVisibility}" Stretch="Uniform">
+                      <Path Data="{Binding IconData}"
+                            Fill="{DynamicResource WindowTextBrush}"
+                            Stroke="{DynamicResource WindowTextBrush}"
+                            StrokeThickness="1.7"
+                            StrokeStartLineCap="Square"
+                            StrokeEndLineCap="Square"
+                            StrokeLineJoin="Miter"/>
+                    </Viewbox>
+                    <TextBlock Text="{Binding Glyph}"
+                               Visibility="{Binding TextVisibility}"
+                               FontSize="15"
+                               FontWeight="Bold"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextWrapping="NoWrap"/>
+                  </Grid>
+                </ToggleButton>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+
+      <Grid Grid.Column="1">
+        <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <controls:EditorCanvas x:Name="LevelCanvas" ViewModel="{Binding}" Visibility="{Binding CanvasVisibility}"/>
+        <DockPanel Visibility="{Binding AssetBrowserVisibility}" Background="{DynamicResource PanelBrush}">
+          <Border DockPanel.Dock="Left" Width="220" Background="{DynamicResource PanelBrush}" Padding="18">
+            <StackPanel>
+              <TextBlock Text="Asset Browser" FontSize="20" FontWeight="Bold"/>
+              <TextBlock Text="{Binding Assets.Count, StringFormat={}{0} assets loaded}" Foreground="{DynamicResource MutedTextBrush}" Margin="0,4,0,20"/>
+              <Button Content="Back to Level Editor" Command="{Binding SelectCenterTabCommand}" CommandParameter="Canvas" HorizontalAlignment="Left" Margin="0,0,0,8"/>
+              <Button Content="Refresh Assets" Command="{Binding RefreshAssetsCommand}" HorizontalAlignment="Left"/>
+              <TextBlock Text="Categories" FontWeight="SemiBold" Margin="0,18,0,6"/>
+              <ListBox ItemsSource="{Binding AssetCategories}"
+                       SelectedItem="{Binding AssetCategory, Mode=TwoWay}"
+                       BorderThickness="0"
+                       Background="Transparent"
+                       MaxHeight="520"/>
+            </StackPanel>
+          </Border>
+          <DockPanel Margin="18">
+            <TextBox DockPanel.Dock="Top"
+                     Text="{Binding AssetSearch, UpdateSourceTrigger=PropertyChanged}"
+                     Height="34"
+                     FontSize="16"
+                     Margin="0,0,0,16"/>
+            <ListBox ItemsSource="{Binding FilteredAssets, Converter={StaticResource AssetRowsConverter}}"
+                     BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     HorizontalContentAlignment="Stretch"
+                     Background="Transparent"
+                     ScrollViewer.CanContentScroll="True"
+                     VirtualizingPanel.IsVirtualizing="True"
+                     VirtualizingPanel.VirtualizationMode="Recycling">
+              <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <VirtualizingStackPanel/>
+                </ItemsPanelTemplate>
+              </ListBox.ItemsPanel>
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <ItemsControl ItemsSource="{Binding}">
+                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="4"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="{x:Type models:TextureAsset}">
+                  <Button Command="{Binding DataContext.SelectAssetCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          CommandParameter="{Binding}"
+                          Height="168"
+                          Margin="4"
+                          Padding="8"
+                          HorizontalContentAlignment="Stretch"
+                          Background="{DynamicResource ControlBrush}">
+                    <StackPanel>
+                      <Border Height="96" Margin="0,0,0,6">
+                        <Border.Style>
+                          <Style TargetType="Border">
+                            <Setter Property="Background" Value="{DynamicResource ToolRailBrush}"/>
+                            <Style.Triggers>
+                              <DataTrigger Binding="{Binding IsStuntIcon}" Value="True">
+                                <Setter Property="Background" Value="#17212B"/>
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </Border.Style>
+                        <Image Source="{Binding FilePath, IsAsync=True}"
+                               Stretch="Uniform"
+                               Margin="4"
+                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                      </Border>
+                      <StackPanel>
+                        <TextBlock Text="{Binding Kind}" Foreground="#007AFF" FontWeight="Bold" FontSize="10"/>
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}"/>
+                        <TextBlock Text="{Binding Category}" Foreground="{DynamicResource MutedTextBrush}" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                      </StackPanel>
+                    </StackPanel>
+                  </Button>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </DockPanel>
+        <Border Visibility="{Binding DynamicStudioVisibility}"
+                VerticalAlignment="Bottom"
+                Margin="18"
+                Height="390"
+                Background="{DynamicResource SettingsCardBrush}"
+                BorderBrush="{DynamicResource ControlBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="14">
+          <Border.Resources>
+            <Style x:Key="DynamicStudioComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+              <Setter Property="Foreground" Value="#202124"/>
+              <Setter Property="Background" Value="#F3F4F6"/>
+            </Style>
+            <Style x:Key="DynamicStudioComboBoxItemStyle" TargetType="ComboBoxItem">
+              <Setter Property="Foreground" Value="#202124"/>
+              <Setter Property="Background" Value="#F3F4F6"/>
+              <Setter Property="Padding" Value="6,4"/>
+              <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                  <Setter Property="Background" Value="#D7E8FF"/>
+                  <Setter Property="Foreground" Value="#111827"/>
+                </Trigger>
+              </Style.Triggers>
+            </Style>
+            <DataTemplate x:Key="DynamicStudioComboItemTemplate">
+              <TextBlock Text="{Binding}" Foreground="#111827"/>
+            </DataTemplate>
+            <DataTemplate x:Key="DynamicStudioTriggerItemTemplate">
+              <TextBlock Text="{Binding Name}" Foreground="#111827"/>
+            </DataTemplate>
+          </Border.Resources>
+          <DockPanel>
+            <Border DockPanel.Dock="Top" Background="#B020242A" CornerRadius="4" Padding="10,7" Margin="0,0,0,12">
+              <DockPanel>
+                <Button DockPanel.Dock="Right" Content="Close" Command="{Binding CloseDynamicStudioCommand}" Foreground="White"/>
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="Dynamic Studio" Foreground="White" FontWeight="Bold" FontSize="16"/>
+                  <TextBlock Text="{Binding DynamicTargetLabel}" Foreground="#D7DEE8" Margin="14,2,0,0"/>
+                  <TextBlock Text="{Binding DynamicCurrentFrame, StringFormat=Frame {0}}" Foreground="#D7DEE8" Margin="14,2,0,0"/>
+                </StackPanel>
+              </DockPanel>
+            </Border>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+              </Grid.ColumnDefinitions>
+
+              <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,14,0">
+                <StackPanel>
+                  <TextBlock Text="TRANSFORMATION" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+                  <TextBlock Text="Name" Margin="0,8,0,3"/>
+                  <TextBox Text="{Binding DynamicTransformName, UpdateSourceTrigger=PropertyChanged}"/>
+                  <TextBlock Text="Total frames" Margin="0,8,0,3"/>
+                  <TextBox Text="{Binding DynamicTotalFrames, UpdateSourceTrigger=LostFocus}"/>
+                  <TextBlock Text="Move" FontWeight="SemiBold" Margin="0,12,0,3"/>
+                  <ComboBox ItemsSource="{Binding DynamicPathModes}" SelectedItem="{Binding DynamicMovementMode}" Style="{StaticResource DynamicStudioComboBoxStyle}" ItemContainerStyle="{StaticResource DynamicStudioComboBoxItemStyle}" ItemTemplate="{StaticResource DynamicStudioComboItemTemplate}"/>
+                  <ComboBox ItemsSource="{Binding DynamicSinQuarters}" SelectedItem="{Binding DynamicMovementQuarter}" Style="{StaticResource DynamicStudioComboBoxStyle}" ItemContainerStyle="{StaticResource DynamicStudioComboBoxItemStyle}" ItemTemplate="{StaticResource DynamicStudioComboItemTemplate}" Margin="0,5,0,0"/>
+                  <TextBlock Text="Resize" FontWeight="SemiBold" Margin="0,12,0,3"/>
+                  <ComboBox ItemsSource="{Binding DynamicPathModes}" SelectedItem="{Binding DynamicSizeMode}" Style="{StaticResource DynamicStudioComboBoxStyle}" ItemContainerStyle="{StaticResource DynamicStudioComboBoxItemStyle}" ItemTemplate="{StaticResource DynamicStudioComboItemTemplate}"/>
+                  <ComboBox ItemsSource="{Binding DynamicSinQuarters}" SelectedItem="{Binding DynamicSizeQuarter}" Style="{StaticResource DynamicStudioComboBoxStyle}" ItemContainerStyle="{StaticResource DynamicStudioComboBoxItemStyle}" ItemTemplate="{StaticResource DynamicStudioComboItemTemplate}" Margin="0,5,0,0"/>
+                  <TextBlock Text="Rotate" FontWeight="SemiBold" Margin="0,12,0,3"/>
+                  <ComboBox ItemsSource="{Binding DynamicRotationModes}" SelectedItem="{Binding DynamicRotationMode}" Style="{StaticResource DynamicStudioComboBoxStyle}" ItemContainerStyle="{StaticResource DynamicStudioComboBoxItemStyle}" ItemTemplate="{StaticResource DynamicStudioComboItemTemplate}"/>
+                </StackPanel>
+              </ScrollViewer>
+
+              <DockPanel Grid.Column="1" Margin="0,0,14,0">
+                <StackPanel DockPanel.Dock="Top">
+                  <DockPanel>
+                    <TextBlock Text="TIMELINE" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding DynamicCurrentFrame}" FontWeight="Bold"/>
+                  </DockPanel>
+                  <controls:DynamicTimelineControl TotalFrames="{Binding DynamicTotalFrames}"
+                                                   CurrentFrame="{Binding DynamicCurrentFrame, Mode=TwoWay}"
+                                                   Keyframes="{Binding DynamicKeyframes}"
+                                                   SelectedKeyframe="{Binding SelectedDynamicKeyframe, Mode=TwoWay}"
+                                                   Height="92"
+                                                   Margin="0,6,0,8"/>
+                  <StackPanel Orientation="Horizontal">
+                    <Button Content="Add keyframe" Command="{Binding AddDynamicKeyframeCommand}"/>
+                    <Button Content="Delete keyframe" Command="{Binding DeleteDynamicKeyframeCommand}"/>
+                    <Button Content="{Binding DynamicPreviewButtonText}" Command="{Binding ToggleDynamicPreviewCommand}"/>
+                    <Button Content="Save" Command="{Binding SaveDynamicCommand}"/>
+                    <CheckBox Content="Scrub" IsChecked="{Binding DynamicScrubPreview}" Margin="10,6,0,0"/>
+                  </StackPanel>
+                </StackPanel>
+                <ListBox ItemsSource="{Binding DynamicKeyframes}"
+                         SelectedItem="{Binding SelectedDynamicKeyframe}"
+                         Margin="0,10,0,0"
+                         BorderThickness="0"
+                         Background="Transparent"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:DynamicStudioKeyframe}">
+                      <Border Padding="10,7" Margin="0,2" CornerRadius="5" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1">
+                        <Border.Style>
+                          <Style TargetType="Border">
+                            <Setter Property="Background" Value="{DynamicResource ControlBrush}"/>
+                            <Style.Triggers>
+                              <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource ToolButtonSelectedBrush}"/>
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </Border.Style>
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="54"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="70"/>
+                          </Grid.ColumnDefinitions>
+                          <TextBlock Grid.Column="0" Text="{Binding Frame, StringFormat=F{0}}" FontWeight="Bold" Foreground="{DynamicResource WindowTextBrush}"/>
+                          <TextBlock Grid.Column="1" Text="{Binding X, StringFormat=X {0}}" Foreground="{DynamicResource MutedTextBrush}"/>
+                          <TextBlock Grid.Column="1" Text="{Binding Y, StringFormat=Y {0}}" Margin="62,0,0,0" Foreground="{DynamicResource MutedTextBrush}"/>
+                          <TextBlock Grid.Column="2" Text="{Binding Width, StringFormat=W {0}}" Foreground="{DynamicResource MutedTextBrush}"/>
+                          <TextBlock Grid.Column="2" Text="{Binding Height, StringFormat=H {0}}" Margin="62,0,0,0" Foreground="{DynamicResource MutedTextBrush}"/>
+                          <TextBlock Grid.Column="3" Text="{Binding Rotation, StringFormat={}{0:0.#} deg}" Foreground="{DynamicResource MutedTextBrush}"/>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </DockPanel>
+
+              <DockPanel Grid.Column="2">
+                <StackPanel DockPanel.Dock="Top">
+                  <TextBlock Text="TRIGGER BINDING" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+                  <ComboBox ItemsSource="{Binding DynamicTriggerNodes}"
+                            SelectedItem="{Binding SelectedDynamicTrigger}"
+                            Style="{StaticResource DynamicStudioComboBoxStyle}"
+                            ItemContainerStyle="{StaticResource DynamicStudioComboBoxItemStyle}"
+                            ItemTemplate="{StaticResource DynamicStudioTriggerItemTemplate}"
+                            Margin="0,6,0,4"/>
+                  <Button Content="Create trigger near object" Command="{Binding CreateDynamicTriggerCommand}" HorizontalAlignment="Left"/>
+                  <TextBlock Text="GENERATED VECTOR 2 XML" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}" Margin="0,12,0,4"/>
+                </StackPanel>
+                <TextBox Text="{Binding DynamicGeneratedXml, Mode=OneWay}"
+                         IsReadOnly="True"
+                         FontFamily="Consolas"
+                         FontSize="11"
+                         TextWrapping="NoWrap"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Auto"/>
+              </DockPanel>
+            </Grid>
+          </DockPanel>
+        </Border>
+
+        <Border Visibility="{Binding BackgroundDesignerVisibility}"
+                VerticalAlignment="Bottom"
+                Margin="18"
+                Background="{DynamicResource SettingsCardBrush}"
+                BorderBrush="{DynamicResource ControlBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="14">
+          <Border.Resources>
+            <Style x:Key="BackgroundDesignerComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+              <Setter Property="Foreground" Value="#111827"/>
+              <Setter Property="Background" Value="#F3F4F6"/>
+            </Style>
+            <Style x:Key="BackgroundDesignerComboBoxItemStyle" TargetType="ComboBoxItem">
+              <Setter Property="Foreground" Value="#111827"/>
+              <Setter Property="Background" Value="#F3F4F6"/>
+              <Setter Property="Padding" Value="5,3"/>
+            </Style>
+            <DataTemplate x:Key="BackgroundDesignerLayerTemplate">
+              <TextBlock Text="{Binding}" Foreground="#111827"/>
+            </DataTemplate>
+          </Border.Resources>
+          <DockPanel>
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+              <Button DockPanel.Dock="Right" Content="Close" Command="{Binding CloseBackgroundDesignerCommand}"/>
+              <StackPanel>
+                <TextBlock Text="Background Designer" FontSize="18" FontWeight="Bold"/>
+                <TextBlock Text="{Binding SelectedBackgroundImageLabel}" Foreground="{DynamicResource MutedTextBrush}"/>
+              </StackPanel>
+            </DockPanel>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="18"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <StackPanel Grid.Column="0">
+                <TextBlock Text="SELECTED IMAGE" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+                <CheckBox Content="Include in background" IsChecked="{Binding BackgroundIncluded}" Margin="0,10,0,0"/>
+                <CheckBox Content="Parallax" IsChecked="{Binding BackgroundParallax}" Margin="0,8,0,0"/>
+                <TextBlock Text="Depth" Margin="0,10,0,3"/>
+                <ComboBox ItemsSource="{Binding BackgroundLayers}"
+                          SelectedItem="{Binding BackgroundLayer}"
+                          Style="{StaticResource BackgroundDesignerComboBoxStyle}"
+                          ItemContainerStyle="{StaticResource BackgroundDesignerComboBoxItemStyle}"
+                          ItemTemplate="{StaticResource BackgroundDesignerLayerTemplate}"/>
+                <TextBlock Text="Factor" Margin="0,10,0,3"/>
+                <DockPanel>
+                  <TextBlock DockPanel.Dock="Right" Text="{Binding BackgroundFactor, StringFormat={}{0:0.00}}" Width="42" VerticalAlignment="Center"/>
+                  <Slider Minimum="0.05" Maximum="0.95" TickFrequency="0.05" IsSnapToTickEnabled="True" Value="{Binding BackgroundFactor}"/>
+                </DockPanel>
+                <Button Content="Reset values" Command="{Binding ResetBackgroundImageCommand}" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+              </StackPanel>
+              <Border Grid.Column="1" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1,0,0,0" Margin="8,0"/>
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="BACKGROUND SET" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+                <TextBlock Text="Name" Margin="0,10,0,3"/>
+                <TextBox Text="{Binding BackgroundName, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Shared custom_backgrounds folder" Margin="0,10,0,3"/>
+                <DockPanel>
+                  <Button DockPanel.Dock="Right" Content="Browse" Command="{Binding BrowseBackgroundsDirectoryCommand}"/>
+                  <TextBox Text="{Binding BackgroundsDirectory}" IsReadOnly="True"/>
+                </DockPanel>
+                <TextBlock Text="Custom textures folder" Margin="0,8,0,3"/>
+                <DockPanel>
+                  <Button DockPanel.Dock="Right" Content="Browse" Command="{Binding BrowseCustomTexturesDirectoryCommand}"/>
+                  <TextBox Text="{Binding CustomTexturesDirectory}" IsReadOnly="True"/>
+                </DockPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                  <Button Content="Import custom textures" Command="{Binding ImportBackgroundTexturesCommand}"/>
+                  <Button Content="Save background" Command="{Binding SaveBackgroundCommand}"/>
+                  <Button Content="Assign to room" Command="{Binding AssignBackgroundCommand}"/>
+                  <Button Content="None" Command="{Binding ClearBackgroundAssignmentCommand}"/>
+                </StackPanel>
+              </StackPanel>
+            </Grid>
+          </DockPanel>
+        </Border>
+        <Border Visibility="{Binding TrickPreviewVisibility}" Background="{DynamicResource SettingsOverlayBrush}" Padding="28">
+          <Border Width="980" Height="660"
+                  Background="{DynamicResource SettingsCardBrush}"
+                  BorderBrush="{DynamicResource ControlBorderBrush}"
+                  BorderThickness="1"
+                  CornerRadius="8"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center">
+            <Border.Resources>
+              <Style x:Key="TrickPreviewComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="Foreground" Value="#111827"/>
+                <Setter Property="Background" Value="#F3F4F6"/>
+              </Style>
+              <Style x:Key="TrickPreviewComboBoxItemStyle" TargetType="ComboBoxItem">
+                <Setter Property="Foreground" Value="#111827"/>
+                <Setter Property="Background" Value="#F3F4F6"/>
+                <Setter Property="Padding" Value="5,3"/>
+              </Style>
+              <DataTemplate x:Key="TrickPreviewSkinTemplate">
+                <TextBlock Text="{Binding DisplayName}" Foreground="#111827"/>
+              </DataTemplate>
+            </Border.Resources>
+            <DockPanel>
+              <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="0,0,0,1" Padding="18">
+                <DockPanel>
+                  <Button DockPanel.Dock="Right" Content="Close" Command="{Binding CloseTrickPreviewCommand}"/>
+                  <StackPanel>
+                    <TextBlock Text="Trick Preview" FontSize="22" FontWeight="Bold"/>
+                    <TextBlock Text="Pick the Vector 2 trick, skin stack, and start offset. The preview anchors on the selected object."
+                               Foreground="{DynamicResource MutedTextBrush}" Margin="0,4,0,0"/>
+                  </StackPanel>
+                </DockPanel>
+              </Border>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="330"/>
+                  <ColumnDefinition Width="1"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <DockPanel Grid.Column="0" Margin="16">
+                  <TextBox DockPanel.Dock="Top" Height="34" Text="{Binding GameTrickSearch, UpdateSourceTrigger=PropertyChanged}" ToolTip="Search tricks" Margin="0,0,0,10"/>
+                  <Button DockPanel.Dock="Bottom" Content="Reload built-in catalog" Command="{Binding RefreshTrickPreviewCommand}" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                  <ListBox ItemsSource="{Binding FilteredGameTrickMoves}"
+                           SelectedItem="{Binding SelectedGameTrickMove}"
+                           Background="Transparent"
+                           BorderThickness="0"
+                           ScrollViewer.VerticalScrollBarVisibility="Auto"
+                           VirtualizingPanel.IsVirtualizing="True">
+                    <ListBox.ItemTemplate>
+                      <DataTemplate DataType="{x:Type models:GameTrickMove}">
+                        <Border Background="{DynamicResource ControlBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1" CornerRadius="5" Padding="10" Margin="0,0,0,6">
+                          <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                            <TextBlock FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap">
+                              <Run Text="{Binding FileName}"/><Run Text="  first "/><Run Text="{Binding FirstFrame}"/><Run Text="  pivot "/><Run Text="{Binding PivotNode}"/>
+                            </TextBlock>
+                          </StackPanel>
+                        </Border>
+                      </DataTemplate>
+                    </ListBox.ItemTemplate>
+                  </ListBox>
+                </DockPanel>
+                <Border Grid.Column="1" Background="{DynamicResource ControlBorderBrush}"/>
+                <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                  <StackPanel Margin="18">
+                    <TextBlock Text="SELECTED TRICK" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+                    <TextBlock Text="{Binding SelectedGameTrickMove.Name}" FontSize="18" FontWeight="Bold" Margin="0,8,0,3"/>
+                    <TextBlock Text="{Binding SelectedGameTrickDetails}" FontFamily="Consolas" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap"/>
+
+                    <Border BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1,0,0,0" Margin="0,18,0,14"/>
+                    <TextBlock Text="MODEL STACK" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+                    <TextBlock Text="0.xml is always loaded first as the skeleton. Choose the visible body and optional equipment layers."
+                               Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap" Margin="0,6,0,12"/>
+                    <Grid>
+                      <Grid.ColumnDefinitions><ColumnDefinition Width="90"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                      <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                      </Grid.RowDefinitions>
+                      <TextBlock Grid.Row="0" Text="Model" Margin="0,7"/><ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding GameTrickBodySkins}" ItemTemplate="{StaticResource TrickPreviewSkinTemplate}" SelectedValuePath="Filename" SelectedValue="{Binding SelectedTrickBody, Mode=TwoWay}" Style="{StaticResource TrickPreviewComboBoxStyle}" ItemContainerStyle="{StaticResource TrickPreviewComboBoxItemStyle}"/>
+                      <TextBlock Grid.Row="1" Text="Chest" Margin="0,7"/><ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding GameTrickChestSkins}" ItemTemplate="{StaticResource TrickPreviewSkinTemplate}" SelectedValuePath="Filename" SelectedValue="{Binding SelectedTrickChest, Mode=TwoWay}" Style="{StaticResource TrickPreviewComboBoxStyle}" ItemContainerStyle="{StaticResource TrickPreviewComboBoxItemStyle}"/>
+                      <TextBlock Grid.Row="2" Text="Helmet" Margin="0,7"/><ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding GameTrickHelmetSkins}" ItemTemplate="{StaticResource TrickPreviewSkinTemplate}" SelectedValuePath="Filename" SelectedValue="{Binding SelectedTrickHelmet, Mode=TwoWay}" Style="{StaticResource TrickPreviewComboBoxStyle}" ItemContainerStyle="{StaticResource TrickPreviewComboBoxItemStyle}"/>
+                      <TextBlock Grid.Row="3" Text="Hair" Margin="0,7"/><ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding GameTrickHairSkins}" ItemTemplate="{StaticResource TrickPreviewSkinTemplate}" SelectedValuePath="Filename" SelectedValue="{Binding SelectedTrickHair, Mode=TwoWay}" Style="{StaticResource TrickPreviewComboBoxStyle}" ItemContainerStyle="{StaticResource TrickPreviewComboBoxItemStyle}"/>
+                    </Grid>
+
+                    <Border BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1,0,0,0" Margin="0,18,0,14"/>
+                    <DockPanel>
+                      <TextBlock Text="PLAYBACK" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+                      <TextBlock Text="60 FPS" HorizontalAlignment="Right" Foreground="{DynamicResource MutedTextBrush}"/>
+                    </DockPanel>
+                    <TextBlock Text="{Binding GameTrickStartEarlierFrames, StringFormat=Start {0} frames before the trick point}" Margin="0,8,0,4"/>
+                    <Slider Minimum="0" Maximum="30" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding GameTrickStartEarlierFrames}"/>
+                    <UniformGrid Columns="2" Margin="0,12,0,0">
+                      <CheckBox Content="Skeleton markers" IsChecked="{Binding GameTrickShowSkeletonPoints, Mode=TwoWay}" Margin="0,4"/>
+                      <CheckBox Content="Detector marker" IsChecked="{Binding GameTrickShowDetectorDots, Mode=TwoWay}" Margin="0,4"/>
+                      <CheckBox Content="Body-node markers" IsChecked="{Binding GameTrickShowModelNodeSpheres, Mode=TwoWay}" Margin="0,4"/>
+                      <CheckBox Content="Body outlines" IsChecked="{Binding GameTrickShowModelSphereOutlines, Mode=TwoWay}" Margin="0,4"/>
+                    </UniformGrid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
+                      <Button Content="Preview Trick" Command="{Binding PreviewSelectedGameTrickCommand}" Padding="18,8" FontWeight="Bold"/>
+                    </StackPanel>
+                  </StackPanel>
+                </ScrollViewer>
+              </Grid>
+            </DockPanel>
+          </Border>
+        </Border>
+        <Border Visibility="{Binding SettingsVisibility}" Background="{DynamicResource PanelBrush}" Padding="24">
+          <Border MaxWidth="980" Background="{DynamicResource PanelBrush}" Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+              <TextBlock Text="Settings" Foreground="{DynamicResource WindowTextBrush}" FontSize="24" FontWeight="Bold" Margin="0,0,0,18"/>
+              <TextBlock Text="Appearance" FontWeight="SemiBold" Margin="0,0,0,8"/>
+              <CheckBox Content="Dark mode" IsChecked="{Binding IsDarkMode, Mode=TwoWay}" Margin="0,0,0,18"/>
+              <CheckBox Content="Show console" IsChecked="{Binding ShowConsole, Mode=TwoWay}" Margin="0,0,0,18"/>
+              <TextBlock Text="Import" FontWeight="SemiBold" Margin="0,0,0,8"/>
+              <TextBlock Text="XML Loader" Foreground="{DynamicResource WindowTextBrush}" FontWeight="SemiBold"/>
+              <ComboBox ItemsSource="{Binding ImportPipelineOptions}"
+                        SelectedItem="{Binding ImportPipeline}"
+                        Foreground="#111827"
+                        Background="#F3F4F6"
+                        Margin="0,8,0,16">
+                <ComboBox.ItemContainerStyle>
+                  <Style TargetType="ComboBoxItem">
+                    <Setter Property="Foreground" Value="#111827"/>
+                    <Setter Property="Background" Value="#F3F4F6"/>
+                    <Setter Property="Padding" Value="6,4"/>
+                    <Style.Triggers>
+                      <Trigger Property="IsHighlighted" Value="True">
+                        <Setter Property="Background" Value="#D7E8FF"/>
+                        <Setter Property="Foreground" Value="#111827"/>
+                      </Trigger>
+                    </Style.Triggers>
+                  </Style>
+                </ComboBox.ItemContainerStyle>
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding}" Foreground="#111827"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+              <TextBlock Text="Model Display" FontWeight="SemiBold" Margin="0,4,0,8"/>
+              <CheckBox Content="Skeleton points" IsChecked="{Binding GameTrickShowSkeletonPoints}" Margin="0,0,0,6"/>
+              <CheckBox Content="Detector dot" IsChecked="{Binding GameTrickShowDetectorDots}" Margin="0,0,0,6"/>
+              <CheckBox Content="Model joint spheres" IsChecked="{Binding GameTrickShowModelNodeSpheres}" Margin="0,0,0,6"/>
+              <CheckBox Content="Model highlights" IsChecked="{Binding GameTrickShowModelSphereOutlines}" Margin="0,0,0,18"/>
+              <TextBlock Text="XML Authoring" FontWeight="SemiBold" Margin="0,0,0,8"/>
+              <CheckBox Content="Predict XML" IsChecked="{Binding XmlPredictionEnabled}" Margin="0,0,0,18"/>
+              <TextBlock Text="Paths" FontWeight="SemiBold" Margin="0,0,0,8"/>
+              <TextBlock Text="ProjectAssets/Vector2 folder" Foreground="{DynamicResource WindowTextBrush}" FontWeight="SemiBold" Margin="0,0,0,6"/>
+              <DockPanel>
+                <Button Content="Browse" Command="{Binding BrowseProjectAssetsCommand}" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                <TextBox Text="{Binding ProjectAssetsRoot, UpdateSourceTrigger=PropertyChanged}"/>
+              </DockPanel>
+              <TextBlock Text="Vector 2 custom_rooms folder" Foreground="{DynamicResource WindowTextBrush}" FontWeight="SemiBold" Margin="0,14,0,6"/>
+              <DockPanel>
+                <Button Content="Browse" Command="{Binding BrowseCustomRoomsCommand}" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                <TextBox Text="{Binding CustomRoomsDir, UpdateSourceTrigger=PropertyChanged}"/>
+              </DockPanel>
+              <TextBlock Text="Vector 2 game executable" Foreground="{DynamicResource WindowTextBrush}" FontWeight="SemiBold" Margin="0,14,0,6"/>
+              <DockPanel>
+                <Button Content="Browse" Command="{Binding BrowseGameExecutableCommand}" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                <TextBox Text="{Binding GameExecutablePath, UpdateSourceTrigger=PropertyChanged}"/>
+              </DockPanel>
+              <TextBlock Text="Custom backgrounds" FontWeight="SemiBold" Margin="0,14,0,6"/>
+              <DockPanel><Button Content="Browse" Command="{Binding BrowseBackgroundsDirectoryCommand}" DockPanel.Dock="Right" Margin="8,0,0,0"/><TextBox Text="{Binding BackgroundsDirectory, UpdateSourceTrigger=PropertyChanged}"/></DockPanel>
+              <TextBlock Text="Custom textures" FontWeight="SemiBold" Margin="0,14,0,6"/>
+              <DockPanel><Button Content="Browse" Command="{Binding BrowseCustomTexturesDirectoryCommand}" DockPanel.Dock="Right" Margin="8,0,0,0"/><TextBox Text="{Binding CustomTexturesDirectory, UpdateSourceTrigger=PropertyChanged}"/></DockPanel>
+              <Button Content="Back to Canvas" Command="{Binding SelectCenterTabCommand}" CommandParameter="Canvas" Margin="0,24,0,0" HorizontalAlignment="Left"/>
+            </StackPanel>
+            </ScrollViewer>
+          </Border>
+        </Border>
+        <views:StructuralRoomStudioBar Grid.Row="1" Document="{Binding SelectedDocument}" Visibility="{Binding StructuralRoomBarVisibility}"/>
+        <views:RoomLayoutPanel x:Name="RoomLayoutWorkspace" Grid.Row="1" Document="{Binding SelectedDocument}" Visibility="{Binding RoomLayoutsVisibility}"/>
+      </Grid>
+
+      <TabControl x:Name="RightDockTabs" Grid.Column="2" Background="{DynamicResource PanelBrush}">
+        <TabItem Header="Hierarchy">
+          <DockPanel>
+            <Border DockPanel.Dock="Top" Background="{DynamicResource PanelHeaderBrush}" Padding="10,6">
+              <TextBlock Text="HIERARCHY" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+            </Border>
+            <TextBox DockPanel.Dock="Top" Margin="10" Text="{Binding HierarchySearch, UpdateSourceTrigger=PropertyChanged}" />
+            <Border DockPanel.Dock="Top"
+                    Margin="10,0,10,8"
+                    Padding="10,7"
+                    CornerRadius="6"
+                    Background="{DynamicResource ToolButtonBrush}"
+                    BorderBrush="{DynamicResource ControlBorderBrush}"
+                    BorderThickness="1"
+                    AllowDrop="True"
+                    DragOver="HierarchyRoot_DragOver"
+                    Drop="HierarchyRoot_Drop">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" FontSize="11" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                <TextBlock Text="Drop here to unparent to scene root" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Border>
+            <TreeView ItemsSource="{Binding HierarchyRootNodes}"
+                      BorderThickness="0"
+                      AllowDrop="True"
+                      SelectedItemChanged="HierarchyTree_SelectedItemChanged"
+                      PreviewMouseLeftButtonDown="HierarchyTree_PreviewMouseLeftButtonDown"
+                      PreviewMouseMove="HierarchyTree_PreviewMouseMove"
+                      DragOver="HierarchyTree_DragOver"
+                      Drop="HierarchyTree_Drop">
+              <TreeView.Resources>
+                <!-- Native WPF selection can remain on an old item while the
+                     editor's multi-selection moves. Keep only our bound selection
+                     background so dark mode never shows a pale ghost row. -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
+                <HierarchicalDataTemplate DataType="{x:Type models:LevelNode}" ItemsSource="{Binding HierarchyChildren}">
+                  <Border Margin="2,1" Padding="4,3" CornerRadius="3">
+                    <Border.Style>
+                      <Style TargetType="Border">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding IsHierarchySelected}" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ToolButtonSelectedBrush}"/>
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </Border.Style>
+                    <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#x25C9;" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,8,0"/>
+                    <StackPanel>
+                      <TextBlock Text="{Binding Name}" Foreground="{DynamicResource WindowTextBrush}"/>
+                      <TextBlock Text="{Binding Kind}" FontSize="10" Foreground="{DynamicResource MutedTextBrush}"/>
+                    </StackPanel>
+                    </StackPanel>
+                  </Border>
+                </HierarchicalDataTemplate>
+              </TreeView.Resources>
+            </TreeView>
+          </DockPanel>
+        </TabItem>
+
+        <TabItem Header="Properties">
+          <ScrollViewer>
+            <StackPanel Margin="10">
+              <views:TriggerActionInspector Document="{Binding SelectedDocument}" SelectedNode="{Binding SelectedDocument.SelectedNode}"/>
+              <views:AnimationAreaInspector SelectedNode="{Binding SelectedDocument.SelectedNode}"/>
+              <TextBlock Text="PROPERTIES" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,12"/>
+              <TextBlock Text="NAME"/>
+              <TextBox Text="{Binding SelectedDocument.SelectedNode.Name, UpdateSourceTrigger=PropertyChanged}"/>
+              <TextBlock Text="TAG" Margin="0,10,0,0"/>
+              <ComboBox ItemsSource="{Binding Tags}" SelectedItem="{Binding SelectedDocument.SelectedNode.Tag}"/>
+              <TextBlock Text="LAYER" Margin="0,10,0,0"/>
+              <ComboBox ItemsSource="{Binding SortingLayers}" SelectedItem="{Binding SelectedDocument.SelectedNode.SortingLayer}"/>
+              <UniformGrid Columns="2" Margin="0,12,0,0">
+                <StackPanel Margin="0,0,4,0"><TextBlock Text="X"/><TextBox Text="{Binding SelectedDocument.SelectedNode.X}"/></StackPanel>
+                <StackPanel Margin="4,0,0,0"><TextBlock Text="Y"/><TextBox Text="{Binding SelectedDocument.SelectedNode.Y}"/></StackPanel>
+                <StackPanel Margin="0,8,4,0"><TextBlock Text="WIDTH"/><TextBox Text="{Binding SelectedDocument.SelectedNode.Width}"/></StackPanel>
+                <StackPanel Margin="4,8,0,0"><TextBlock Text="HEIGHT"/><TextBox Text="{Binding SelectedDocument.SelectedNode.Height}"/></StackPanel>
+              </UniformGrid>
+              <TextBlock Text="ROTATION" Margin="0,10,0,0"/>
+              <TextBox Text="{Binding SelectedDocument.SelectedNode.Rotation, UpdateSourceTrigger=PropertyChanged}"/>
+              <TextBlock Text="FACTOR" Margin="0,10,0,0"/>
+              <TextBox Text="{Binding SelectedDocument.SelectedNode.Factor, UpdateSourceTrigger=PropertyChanged}"/>
+              <TextBlock Text="XML" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}" Margin="0,20,0,8"/>
+              <TextBlock Text="TEMPLATE"/>
+              <TextBox Text="{Binding SelectedDocument.SelectedNode.Template}"/>
+              <TextBlock Text="CHOICE" Margin="0,8,0,0"/>
+              <TextBox Text="{Binding SelectedDocument.SelectedNode.Choice}"/>
+              <TextBlock Text="VARIANT" Margin="0,8,0,0"/>
+              <TextBox Text="{Binding SelectedDocument.SelectedNode.Variant}"/>
+              <TextBlock Text="BLEND" Margin="0,8,0,0"/>
+              <TextBox Text="{Binding SelectedDocument.SelectedNode.Blend}"/>
+              <TextBlock Text="CLASS" Margin="0,8,0,0"/>
+              <TextBox Text="{Binding SelectedDocument.SelectedNode.ClassName}"/>
+              <TextBlock Text="FILE" Margin="0,8,0,0"/>
+              <TextBox Text="{Binding SelectedDocument.SelectedNode.Filename}"/>
+            </StackPanel>
+          </ScrollViewer>
+        </TabItem>
+
+        <TabItem Header="Raw XML">
+          <DockPanel>
+            <Border DockPanel.Dock="Top" Background="{DynamicResource PanelHeaderBrush}" Padding="8">
+              <Button Content="Apply Raw XML" Command="{Binding ApplyRawXmlCommand}" HorizontalAlignment="Left"/>
+            </Border>
+            <views:XmlAuthoringView Text="{Binding SelectedDocument.RawXml, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+          </DockPanel>
+        </TabItem>
+
+        <TabItem Header="Console" Visibility="{Binding ConsoleVisibility}">
+          <DockPanel>
+            <Border DockPanel.Dock="Top" Background="{DynamicResource PanelHeaderBrush}" Padding="10,6">
+              <DockPanel>
+                <TextBlock Text="CONSOLE" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}"/>
+                <Button Content="Save .txt" Command="{Binding SaveDiagnosticsCommand}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+                <Button Content="Clear" Command="{Binding ClearDiagnosticsCommand}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+              </DockPanel>
+            </Border>
+            <ListBox ItemsSource="{Binding Diagnostics}"
+                     FontFamily="Consolas"
+                     FontSize="11"
+                     BorderThickness="0">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Display}" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </TabItem>
+      </TabControl>
+      </Grid>
+      <projectManager:ProjectManagerWindow x:Name="ProjectManagerWorkspace" Visibility="{Binding DataContext.ProjectManagerVisibility, RelativeSource={RelativeSource AncestorType=Window}}"/>
+      <views:AIStudioView x:Name="AIStudioWorkspace" Document="{Binding AIStudioTarget}" Visibility="{Binding AIStudioVisibility}"/>
+      <views:PlayerStudioView x:Name="PlayerStudioWorkspace" Document="{Binding PlayerStudioTarget}" Visibility="{Binding PlayerStudioVisibility}"/>
+    </Grid>
+  </DockPanel>
+</Window>

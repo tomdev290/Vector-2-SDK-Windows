@@ -1,0 +1,132 @@
+<UserControl x:Class="Vector2LevelEditor.Views.ProjectManager.Studios.ProjectOverviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="OverviewRoot"
+             Background="{DynamicResource ProjectManagerCardBrush}">
+  <UserControl.Resources>
+    <Style x:Key="OverviewPanel" TargetType="Border">
+      <Setter Property="Background" Value="{DynamicResource ProjectManagerCardBrush}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource ProjectManagerEdgeBrush}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="7"/>
+      <Setter Property="Padding" Value="12"/>
+    </Style>
+  </UserControl.Resources>
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Center">
+    <StackPanel MinWidth="900" MaxWidth="1060" HorizontalAlignment="Stretch" Margin="24,14,24,24">
+      <TextBlock Text="Project Overview" FontSize="25" FontWeight="Bold"/>
+      <TextBlock Text="Open a section on the left to edit this project." FontSize="13" Foreground="{DynamicResource ProjectManagerMutedBrush}" Margin="0,2,0,12"/>
+
+      <Border Style="{StaticResource OverviewPanel}">
+        <Grid>
+          <Grid.ColumnDefinitions><ColumnDefinition Width="210"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+          <Button Command="{Binding ChooseCoverCommand}" ToolTip="Choose project artwork" Padding="0" Margin="0" HorizontalContentAlignment="Stretch">
+            <Grid Width="200" Height="150" Background="{DynamicResource ProjectManagerArtworkBrush}">
+              <TextBlock Text="&#xEB9F;" FontFamily="Segoe MDL2 Assets" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ProjectManagerMutedBrush}"/>
+              <Image Source="{Binding OverviewCoverPath}" Stretch="Uniform"/>
+            </Grid>
+          </Button>
+          <StackPanel Grid.Column="1" Margin="15,0,0,0">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="{Binding Project.Name}" FontSize="20" FontWeight="Bold"/>
+              <TextBlock Text="  ● Active Project" FontSize="11" Foreground="#2A9B5A" VerticalAlignment="Center"/>
+            </StackPanel>
+            <TextBlock Foreground="{DynamicResource ProjectManagerMutedBrush}" FontSize="11" Margin="0,5,0,5">
+              <Run Text="Version "/><Run Text="{Binding Project.Version}"/><Run Text="  |  Author "/><Run Text="{Binding Project.Author}"/>
+            </TextBlock>
+            <TextBlock Text="{Binding ProjectDescriptionText}" TextWrapping="Wrap" FontSize="12" MaxHeight="30"/>
+            <UniformGrid Columns="6" Margin="0,13,0,0">
+              <StackPanel><TextBlock Text="Zones" FontSize="10" Foreground="{DynamicResource ProjectManagerMutedBrush}"/><TextBlock Text="{Binding ZoneCount}" FontWeight="Bold" FontSize="17"/></StackPanel>
+              <StackPanel><TextBlock Text="Rooms" FontSize="10" Foreground="{DynamicResource ProjectManagerMutedBrush}"/><TextBlock Text="{Binding RoomCount}" FontWeight="Bold" FontSize="17"/></StackPanel>
+              <StackPanel><TextBlock Text="Assets" FontSize="10" Foreground="{DynamicResource ProjectManagerMutedBrush}"/><TextBlock Text="{Binding AssetCount}" FontWeight="Bold" FontSize="17"/></StackPanel>
+              <StackPanel><TextBlock Text="Models" FontSize="10" Foreground="{DynamicResource ProjectManagerMutedBrush}"/><TextBlock Text="{Binding ModelCount}" FontWeight="Bold" FontSize="17"/></StackPanel>
+              <StackPanel><TextBlock Text="Tricks" FontSize="10" Foreground="{DynamicResource ProjectManagerMutedBrush}"/><TextBlock Text="{Binding TrickCount}" FontWeight="Bold" FontSize="17"/></StackPanel>
+              <StackPanel><TextBlock Text="Audio" FontSize="10" Foreground="{DynamicResource ProjectManagerMutedBrush}"/><TextBlock Text="{Binding AudioCount}" FontWeight="Bold" FontSize="17"/></StackPanel>
+            </UniformGrid>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <Grid Margin="0,12,0,0">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="320"/></Grid.ColumnDefinitions>
+        <Border Style="{StaticResource OverviewPanel}" Margin="0,0,10,0">
+          <StackPanel>
+            <DockPanel Margin="0,0,0,9">
+              <Button DockPanel.Dock="Right" Content="Add Zone  +" Command="{Binding ShowZonesCommand}" Foreground="#287CE4"/>
+              <TextBlock Text="Zones" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+            </DockPanel>
+            <ItemsControl ItemsSource="{Binding OverviewZones}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Button Command="{Binding DataContext.OpenZoneFolderCommand, ElementName=OverviewRoot}" CommandParameter="{Binding}" Padding="0" Margin="0,0,8,8" ToolTip="Open zone folder">
+                    <Grid Width="156" Height="104" Background="#285B96">
+                      <Image Source="{Binding ArtworkPath}" Stretch="UniformToFill"/>
+                      <Border Background="#990A1F34" VerticalAlignment="Bottom" Padding="8,5">
+                        <StackPanel>
+                          <TextBlock Text="{Binding Name}" Foreground="White" FontSize="12" FontWeight="Bold"/>
+                          <TextBlock Text="{Binding RoomCount, StringFormat={}{0} rooms}" Foreground="White" FontSize="10"/>
+                        </StackPanel>
+                      </Border>
+                    </Grid>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Text="No zones yet." Visibility="{Binding NoZonesVisibility}" Foreground="{DynamicResource ProjectManagerMutedBrush}" FontSize="12" Margin="8,35,0,45"/>
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Style="{StaticResource OverviewPanel}">
+          <StackPanel>
+            <DockPanel Margin="0,0,0,8">
+              <Button DockPanel.Dock="Right" Content="View All  →" Command="{Binding ShowRoomsCommand}" Foreground="#287CE4"/>
+              <TextBlock Text="Recent Rooms" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+            </DockPanel>
+            <ItemsControl ItemsSource="{Binding RecentRooms}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <DockPanel Height="29">
+                    <TextBlock DockPanel.Dock="Left" Text="&#xE8A5;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource ProjectManagerMutedBrush}" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding Modified, StringFormat={}{0:MMM d}}" Foreground="{DynamicResource ProjectManagerMutedBrush}" FontSize="10" VerticalAlignment="Center"/>
+                    <Button Content="{Binding Name}" Command="{Binding DataContext.OpenRecentRoomCommand, ElementName=OverviewRoot}" CommandParameter="{Binding}" HorizontalAlignment="Left" Padding="0"/>
+                  </DockPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Text="No rooms imported." Visibility="{Binding NoRoomsVisibility}" Foreground="{DynamicResource ProjectManagerMutedBrush}" FontSize="12" Margin="8,35,0,45"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <Grid Margin="0,12,0,0">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="320"/></Grid.ColumnDefinitions>
+        <Border Style="{StaticResource OverviewPanel}" Margin="0,0,10,0">
+          <StackPanel>
+            <TextBlock Text="Quick Actions" FontSize="13" FontWeight="Bold" Margin="0,0,0,10"/>
+            <UniformGrid Columns="4">
+              <Button Content="Open Room" Command="{Binding ShowRoomsCommand}" Padding="10,17" Margin="0,0,7,0" BorderBrush="{DynamicResource ProjectManagerEdgeBrush}" BorderThickness="1"/>
+              <Button Content="Validate" Command="{Binding ValidateCommand}" Padding="10,17" Margin="0,0,7,0" BorderBrush="{DynamicResource ProjectManagerEdgeBrush}" BorderThickness="1"/>
+              <Button Content="Assets" Command="{Binding ShowAssetsCommand}" Padding="10,17" Margin="0,0,7,0" BorderBrush="{DynamicResource ProjectManagerEdgeBrush}" BorderThickness="1"/>
+              <Button Content="Install to Game" Command="{Binding InstallCommand}" Padding="10,17" BorderBrush="{DynamicResource ProjectManagerEdgeBrush}" BorderThickness="1"/>
+            </UniformGrid>
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Style="{StaticResource OverviewPanel}">
+          <StackPanel>
+            <Expander Header="Project Settings" FontWeight="SemiBold">
+              <StackPanel Margin="0,10,0,0">
+                <TextBlock Text="Name" FontSize="11"/><TextBox Text="{Binding Project.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Version" FontSize="11" Margin="0,6,0,0"/><TextBox Text="{Binding Project.Version, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Author" FontSize="11" Margin="0,6,0,0"/><TextBox Text="{Binding Project.Author, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Description" FontSize="11" Margin="0,6,0,0"/><TextBox Text="{Binding Project.Description, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Content="Save Project Settings" Command="{Binding SaveProjectCommand}" HorizontalAlignment="Left" Margin="0,9,0,0"/>
+              </StackPanel>
+            </Expander>
+            <TextBlock Text="{Binding Project.Name}" FontSize="11" Margin="0,9,0,0"/>
+            <TextBlock Text="{Binding ProjectPath}" FontSize="10" Foreground="{DynamicResource ProjectManagerMutedBrush}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

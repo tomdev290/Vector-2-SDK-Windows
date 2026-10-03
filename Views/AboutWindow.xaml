@@ -1,0 +1,31 @@
+<Window x:Class="Vector2LevelEditor.Views.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About Vector 2 Level Editor" Width="660" Height="410"
+        ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource PanelBrush}" Foreground="{DynamicResource WindowTextBrush}">
+  <Grid Margin="28">
+    <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <StackPanel>
+      <TextBlock Text="Vector 2 Level Editor" FontSize="24" FontWeight="Bold"/>
+      <TextBlock Text="Developed by ghosted" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource MutedTextBrush}" Margin="0,8,0,0"/>
+      <TextBlock Text="Windows Port - Release Alpha 3.2" FontSize="12" Foreground="{DynamicResource MutedTextBrush}" Margin="0,3,0,0"/>
+      <TextBlock Text="COMMUNITY" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource MutedTextBrush}" Margin="0,22,0,8"/>
+      <StackPanel Orientation="Horizontal">
+        <Button Content="YouTube" Click="OpenYouTube_Click" Background="{DynamicResource ToolButtonBrush}" Margin="0,0,8,0"/>
+        <Border Background="{DynamicResource ToolButtonBrush}" CornerRadius="6" Padding="10,6" Margin="0,0,8,0"><TextBlock Text="Discord: enderdude290"/></Border>
+        <Button Content="Vectorier server" Click="OpenVectorier_Click" Background="{DynamicResource ToolButtonBrush}"/>
+      </StackPanel>
+      <TextBlock Text="A massive thanks to:" FontSize="18" FontWeight="Bold" Margin="0,24,0,12"/>
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="125"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+        <Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="@vision" FontWeight="Bold" Margin="0,0,0,8"/><TextBlock Grid.Row="0" Grid.Column="1" Text="ConvertXmlObject2 guidance and Vector 2 XML sanity checks"/>
+        <TextBlock Grid.Row="1" Text="@flipthosetitle" FontWeight="Bold" Margin="0,0,0,8"/><TextBlock Grid.Row="1" Grid.Column="1" Text="Vectorier work that was used for this project"/>
+        <TextBlock Grid.Row="2" Text="@tom" FontWeight="Bold" Margin="0,0,0,8"/><TextBlock Grid.Row="2" Grid.Column="1" Text="Windows port work"/>
+        <TextBlock Grid.Row="3" Text="@kubinka" FontWeight="Bold"/><TextBlock Grid.Row="3" Grid.Column="1" Text="The most eager playtester"/>
+      </Grid>
+    </StackPanel>
+    <Button Grid.Row="1" Content="Close" Click="Close_Click" HorizontalAlignment="Right" Background="{DynamicResource ToolButtonBrush}" Padding="18,6"/>
+  </Grid>
+</Window>
